@@ -37,10 +37,9 @@ release: clean_release ensure test $(PLATFORMS)
 install: build
 	cp $(BINARY_DIR)/$(BINARY) $(GOPATH_BIN)
 
-
 # TEST
 .PHONY: test
-test: lint
+test:
 	go test ${PKGS}
 
 # DEP ENSURE
