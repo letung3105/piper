@@ -104,13 +104,13 @@ def createUserInstances(username, nInstances):
 
 
 if __name__ == '__main__':
-    CA_CRT = Path("cacert.pem")
-    CRT = Path("clientcert.pem")
-    KEY = Path("clientkey.pem")
-    HOST = "vgurobocon2019.local"
+    CA_CRT = str(Path("./keys/certs/pub/cacert.pem"))
+    CRT = str(Path("./keys/certs/pub/clientcert.pem"))
+    KEY = str(Path("./keys/certs/priv/clientkey.pem"))
+    HOST = "35.247.153.42"
     PORT = 4433
 
-    INSTANCE_PER_USER = 30
+    INSTANCE_PER_USER = 1
 
     # Cài đặt và thông tin của giao thức mã hoá cho websocket
     sslopt = {
@@ -122,8 +122,6 @@ if __name__ == '__main__':
 
     users = {
         'user': 'password',
-        'user1': 'password1',
-        'user2': 'password2'
     }
 
     threads = []
