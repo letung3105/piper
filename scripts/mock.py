@@ -15,17 +15,20 @@ def randData():
         dimension = [random.randint(-90, 90), random.randint(-90, 90)]
         frame.append({
             'name': name,
-            'pos': position,
-            'dim': dimension
+            'position': position,
+            'dimension': dimension
         })
 
     return frame
 
 
 def main():
-    for i in range(len(COLORS)):
-        for j in range(i, len(COLORS)):
-            names.append(COLORS[i] + COLORS[j])
+    for i in range(2):
+        names.append("manual_%d" % (i + 1))
+        names.append("auto_%d" % (i + 1))
+
+    for i in range(24):
+        names.append("object_%d" % (i + 1))
 
     while True:
         print(json.dumps(randData()))

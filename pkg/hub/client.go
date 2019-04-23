@@ -9,7 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const maxMessageSize = 1024
+const maxMessageSize = 32
 const writeWait = 1 * time.Second
 const pongWait = 60 * time.Second
 const pingPeriod = (pongWait * 8) / 10
