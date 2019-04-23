@@ -12,6 +12,12 @@ ARCH ?= amd64
 PKGS := $(shell go list ./... | grep -v /vendor)
 GOPATH_BIN := $(GOPATH)/bin
 
+# Check for golangci-lint tool dependency
+GOLANGCI_LINT := $(GOPATH_BIN)/golangci-lint
+
+# Check for dep tool dependency
+DEP := $(GOPATH_BIN)/dep
+
 # DEFAULT
 .PHONY: default
 default: build release
@@ -30,6 +36,7 @@ release: clean_release ensure test $(PLATFORMS)
 .PHONY: install
 install: build
 	cp $(BINARY_DIR)/$(BINARY) $(GOPATH_BIN)
+
 
 # TEST
 .PHONY: test
@@ -62,12 +69,11 @@ $(PLATFORMS):
 	GOOS=$(OS) GOARCH=$(ARCH)
 	go build -race -o $(RELEASE_DIR)/$(BINARY)-$(VERSION)-$(OS)-$(ARCH) ./cmd/$(BINARY)
 
-# Check for golangci-lint tool dependency
-GOLANGCI_LINT := $(GOPATH_BIN)/golangci-lint
+
+.PHONY: $(GOLANGCI_LINT)
 $(GOLANGCI_LINT):
 	go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
 
-# Check for dep tool dependency
-DEP := $(GOPATH_BIN)/dep
+.PHONY: $(DEP)
 $(DEP):
 	go get -u github.com/golang/dep/cmd/dep

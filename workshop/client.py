@@ -82,7 +82,7 @@ sslopt = {
 
 
 ## Nhận mã xác thực và thêm mã xác thực vào thông tin yêu cầu Websocket
-HOST = "vgurobocon2019.local"
+HOST = "35.247.153.42"
 PORT = 4433
 
 url = 'https://%s:%s/subscribe' % (HOST, PORT)
