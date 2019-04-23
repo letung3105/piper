@@ -82,7 +82,7 @@ sslopt = {
 ## Nhận mã xác thực và thêm mã xác thực vào thông tin yêu cầu Websocket
 
 # Tên địa chỉ server (thay đổi vào ngày thi đấu)
-HOST = "tunglevo.com"
+HOST = "test.tunglevo.com"
 # Tên cổng kết nối (thay đổi vào ngày thi đấu)
 PORT = 4433
 
