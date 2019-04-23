@@ -107,7 +107,7 @@ if __name__ == '__main__':
     CA_CRT = str(Path("./keys/certs/pub/cacert.pem"))
     CRT = str(Path("./keys/certs/pub/clientcert.pem"))
     KEY = str(Path("./keys/certs/priv/clientkey.pem"))
-    HOST = "35.247.153.42"
+    HOST = "tunglevo.com"
     PORT = 4433
 
     INSTANCE_PER_USER = 1
