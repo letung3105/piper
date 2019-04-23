@@ -129,12 +129,12 @@ func (h *Hub) Subscribe(w http.ResponseWriter, r *http.Request) {
 	expectedPassword, ok := h.users[creds.Username]
 	if !ok {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Infof("invalid user's credentials")
+		log.Infof("invalid username")
 		return
 	}
 	if expectedPassword != creds.Password {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Infof("invalid user's credentials")
+		log.Infof("invalid user's password")
 		return
 	}
 

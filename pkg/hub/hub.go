@@ -33,7 +33,7 @@ type packet struct {
 }
 
 const broadcastBufSize = 4096 // messages queue size
-const maxInstances = 200      // maximum instances per client
+const maxInstances = 100      // maximum instances per client
 
 // upgrader upgrades normal HTTP connection to a WebSocket
 var upgrader = websocket.Upgrader{
