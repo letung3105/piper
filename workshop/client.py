@@ -6,10 +6,6 @@ import time
 import urllib.request
 from pathlib import Path
 
-# http://vgurobocon2019.local/
-
-# Các hàm được sử dụng
-
 
 ## Cài đặt và trả về thông tin cho giao thức mã hoá HTTPS
 def makeSSLContext(ca, crt, key):
@@ -69,6 +65,8 @@ def getToken(url, username, password,
 
 
 ## Cài đặt thông tin của giao thức mã hoá cho Websocket
+
+# Đường dẫn đến các tập tin nhận từ BTC
 CA_CRT = str(Path("cacert.pem"))
 CRT = str(Path("clientcert.pem"))
 KEY = str(Path("clientkey.pem"))
@@ -82,11 +80,15 @@ sslopt = {
 
 
 ## Nhận mã xác thực và thêm mã xác thực vào thông tin yêu cầu Websocket
+
+# Tên địa chỉ server (thay đổi vào ngày thi đấu)
 HOST = "tunglevo.com"
+# Tên cổng kết nối (thay đổi vào ngày thi đấu)
 PORT = 4433
 
 url = 'https://%s:%s/subscribe' % (HOST, PORT)
 token = getToken(url,
+                 # Thông tin tài khoản của mỗi đội
                  'user', 'password',
                  CA_CRT, CRT, KEY)
 
@@ -105,4 +107,5 @@ while True:
     msg = ws.recv()
     packet = json.loads(msg.decode('utf-8'))
     print(packet)
+    time.sleep(1)
     ws.send(json.dumps({'finished': True}).encode('utf-8'))
