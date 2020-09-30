@@ -1,6 +1,3 @@
-// TODO: Add authentication to server
-// TODO: remove client buffer
-
 package hub
 
 import (
