@@ -7,24 +7,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// ClientCredentials stores client login information
-type ClientCredentials struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Role     string
-}
-
-// Token stores user jwt
-type Token struct {
-	Token string `json:"token"`
-}
-
 const clientBufSize = 1024
 
 // ServeHTTP handles upgrading and maintaining websocket connection with client
 func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	username := r.Context().Value(usernameKey).(string)
-
 	// update client connection to websocket
 	wsConn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -35,7 +21,7 @@ func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// create and subscribe new client
 	wsClient := &WSClient{
-		username: username,
+		username: r.RemoteAddr,
 		nMsgRead: 0,
 		free:     true,
 		h:        h,
@@ -49,41 +35,6 @@ func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// start writing messages from broadcast channel to client
 	go wsClient.writePipe()
-}
-
-// Subscribe validates user credentials and sends back a token
-func (h *Hub) Subscribe(w http.ResponseWriter, r *http.Request) {
-	// get client username and password from http body
-	creds := &ClientCredentials{}
-	if err := json.NewDecoder(r.Body).Decode(creds); err != nil {
-		log.Errorf("could not parse credentials; got %v", err)
-		return
-	}
-
-	// validate for username and password
-	user, ok := h.users[creds.Username]
-	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
-		log.Infof("invalid user's credentials")
-		return
-	}
-	if user.Password != creds.Password {
-		w.WriteHeader(http.StatusBadRequest)
-		log.Infof("invalid user's credentials")
-		return
-	}
-
-	creds.Role = user.Role
-
-	// sign new jwt for client
-	token, err := newJWTToken(h.jwtSign, creds)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Errorf("could not create token; got %v", err)
-		return
-	}
-
-	httpWriteJSON(w, &Token{token})
 }
 
 // Control starts and stops script from running

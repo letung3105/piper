@@ -1,12 +1,9 @@
 package hub
 
 import (
-	"crypto/rsa"
-	"fmt"
 	"net/http"
 	"sync"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/websocket"
 	log "github.com/sirupsen/logrus"
 )
@@ -19,10 +16,7 @@ type UserInfo struct {
 
 // Hub manages subscribed clients and message broadcast
 type Hub struct {
-	jwtSign        *rsa.PrivateKey        // private rsa key for signing jwt
-	jwtVerify      *rsa.PublicKey         // public rsa key for verifying jwt
 	isBroadcasting bool                   // check if server if broadcasting messages
-	users          map[string]*UserInfo   // users credentials for subscribing
 	instances      map[string]uint8       // limit number for instances per client
 	wsClients      map[*WSClient]struct{} // manage subscribed client websocket connection
 	subscribe      chan *WSClient         // clients queue for subscription
@@ -48,25 +42,9 @@ var upgrader = websocket.Upgrader{
 }
 
 // New returns a broadcasting hub
-func New(users map[string]*UserInfo, signKey, verifyKey []byte) *Hub {
-	fmt.Println(users)
-	// load private rsa key
-	jwtSign, err := jwt.ParseRSAPrivateKeyFromPEM(signKey)
-	if err != nil {
-		log.Fatalf("could not parse private key; got %v", err)
-	}
-
-	// load public rsa key
-	jwtVerify, err := jwt.ParseRSAPublicKeyFromPEM(verifyKey)
-	if err != nil {
-		log.Fatalf("could not parse public key; got %v", err)
-	}
-
+func New() *Hub {
 	return &Hub{
-		jwtSign:        jwtSign,
-		jwtVerify:      jwtVerify,
 		isBroadcasting: false,
-		users:          users,
 		wsClients:      make(map[*WSClient]struct{}),
 		instances:      make(map[string]uint8),
 		subscribe:      make(chan *WSClient),
